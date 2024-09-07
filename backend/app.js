@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const app = express();
 const config = require('./config');
 const apiRoutes = require('./routes/api');
@@ -8,13 +9,22 @@ const authMiddleware = require('./middleware/auth');
 // Middleware setup
 app.use(express.json());
 
-// Routes for login and signup (no authentication needed)
 app.use('/auth', authRoutes);
 
-// Protected routes (authentication required)
 app.use('/api', authMiddleware, apiRoutes);
 
-// Start server
+// Connect to MongoDB
+mongoose.connect(`mongodb://${config.db.host}:${config.db.port}/${config.db.name}`, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => {
+  console.log('Connected to MongoDB successfully');
+})
+.catch(err => {
+  console.error('Failed to connect to MongoDB:', err);
+});
+
 const PORT = config.port || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

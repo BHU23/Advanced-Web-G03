@@ -3,6 +3,6 @@ module.exports = {
   db: {
     host: 'localhost',
     port: 27017,
-    name: 'mydatabase'
+    name: 'AW-01'
   }
 };
